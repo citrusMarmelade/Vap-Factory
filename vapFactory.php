@@ -54,7 +54,7 @@ $products = $result->fetchAll(PDO::FETCH_ASSOC);
                 <th>description</th>
                 <th>prix de vente</th>
                 <th>quantité</th>
-
+                <th>actions</th>
             </tr>
         </thead>
         <tbody>
@@ -75,6 +75,7 @@ $products = $result->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </form>
                     </td>
+                    <td><button class="btn btn-warning">modier information</td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
