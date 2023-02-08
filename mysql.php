@@ -36,3 +36,13 @@ function createProduct($reference, $nom, $description, $prixAchat, $prixVente, $
     $params = [$reference, $nom, $description, $prixAchat, $prixVente, $quantiée];
     $insertProduct->execute($params);
 }
+
+//mofifie les stocks
+function changeStock($quantiée,$ID){
+global $mysqlConnection;
+$sqlQuery ="UPDATE `produits` SET `quantité_en_stock` = quantité_en_stock+?  WHERE `produits`.`ID` = ?"; 
+
+$changeStock = $mysqlConnection->prepare($sqlQuery);
+$paramsStock = [$quantiée,$ID];
+$changeStock->execute($paramsStock);
+};
