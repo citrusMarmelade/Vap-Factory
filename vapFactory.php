@@ -1,55 +1,24 @@
 <?php
-// Souvent on identifie cet objet par la variable $conn ou $db
-$mysqlConnection = new PDO(
-    'mysql:host=localhost;dbname=vap_factory;charset=utf8',
-    'admin',
-    'adminpwd'
-);
-// récupere tous les produits
-function getproducts()
-{
-    global $mysqlConnection;
-    $requete = 'SELECT * FROM  produits';
-    $rows = $mysqlConnection->query($requete);
-    return $rows;
-}
-
-// ajouter un nouveau produit 
-
-
-
+require "mysql.php";
 
 if (!empty($_POST)) {
-    $sqlQuery = "INSERT INTO `produits` (`référence`, `nom`, `description`, `prix_d'achat`, `prix_de_vente`, `quantité_en_stock`) 
-                                 VALUES (:reference,  :nom,  :description,  :prix_d_achat,  :prix_de_vente,  :quantite_en_stock) AS new
-    ON DUPLICATE KEY UPDATE
-        `nom` = new.`nom`,
-        `description`= new.`description`, 
-        `prix_d'achat` = new.`prix_d_achat`, 
-        `quantité_en_stock` = new.`quantite_en_stock`, 
-        `prix_de_vente`= new.`prix_de_vente`";
-// Préparation
-$insertProduct = $mysqlConnection->prepare($sqlQuery);
+    if ($_POST["action"] == "create") {
+        $receptionReference = $_POST["réference"];
+        $receptionNom = $_POST["nom"];
+        $receptionDescription = $_POST["description"];
+        $receptionPrix_de_vente = $_POST["prix_de_vente"];
+        $receptionPrixdachat = $_POST["prix_d_achat"];
+        $receptionQuantitéenstock = $_POST["quantité_en_stock"];
+        createProduct(
+            $receptionReference, $receptionNom, $receptionDescription,
+            $receptionPrixdachat, $receptionPrix_de_vente, $receptionQuantitéenstock
+        );
+    } else if ($_POST["action"] == "modifyStock") {
 
-    $receptionReference = $_POST["réference"];
-    $receptionNom = $_POST["nom"];
-    $receptionDescription = $_POST["description"];
-    $receptionPrix_de_vente = $_POST["prix_de_vente"];
-    $receptionPrixdachat = $_POST["prix_d_achat"];
-    $receptionQuantitéenstock = $_POST["quantité_en_stock"];
-
-    // Exécution ! le produit est maintenant en base de données
-    $insertProduct->execute([
-        "reference" => $receptionReference,
-        "nom" => $receptionNom,
-        "description" => $receptionDescription,
-        "prix_d_achat" => $receptionPrixdachat,
-        "prix_de_vente" => $receptionPrix_de_vente,
-        "quantite_en_stock" => $receptionQuantitéenstock
-    ]);
+    }
 };
-//recupere les donner 
-$result = getproducts();
+
+$result = getProducts();
 $result->execute();
 $products = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -88,7 +57,16 @@ $products = $result->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= $product["nom"] ?></td>
                     <td><?= $product["description"] ?></td>
                     <td><?= $product["prix_de_vente"] ?></td>
-                    <td><?= $product["quantité_en_stock"] ?></td>
+                    <td><?= $product["quantité_en_stock"] ?>
+                    <form class="form-inline">
+                        <input type="hidden" name="action" value="modifyStock">
+                        <div class="input-group">
+                            <input class="form-control" type="number" name="transactionSize" min="1" value="1">
+                            <button class="btn btn-success"  name="transactionType" value="buy"> + </button>
+                            <button class="btn btn-danger" name="transactionType" value="sale"> - </button>
+                        </div>
+                    </form>
+                </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -122,7 +100,7 @@ $products = $result->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
             </tbody>
         </table>
-        <input type="submit" value="OK">
+        <button class="btn btn-success" type="submit" name="action" value="create">Créer</button>
     </form>
 
 </body>
