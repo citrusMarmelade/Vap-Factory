@@ -7,13 +7,13 @@ if (!empty($_POST)) {
         $receptionNom = $_POST["nom"];
         $receptionDescription = $_POST["description"];
         $receptionPrixDeVente = $_POST["prix_de_vente"];
-        $receptionPrixAchat = $_POST["prix_d_achat"];
+        $receptionPrixDAchat = $_POST["prix_d_achat"];
         $receptionQuantitéenstock = $_POST["quantité_en_stock"];
         createProduct(
             $receptionReference,
             $receptionNom,
             $receptionDescription,
-            $receptionPrixAchat,
+            $receptionPrixDAchat,
             $receptionPrixDeVente,
             $receptionQuantitéenstock
         );
@@ -55,11 +55,11 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <title>vap factory</title>
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <table class="table">
         <thead>
             <tr>
@@ -78,18 +78,19 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
                     <td><?= $product["nom"] ?></td>
                     <td><?= $product["description"] ?></td>
                     <td><?= $product["prix_de_vente"] ?></td>
-                    <td><?= $product["quantité_en_stock"] ?>
+                    <td>
                         <form class="form-inline" method="post">
                             <input type="hidden" name="action" value="modifyStock">
                             <input type="hidden" name="ID" value="<?= $product["ID"] ?>">
                             <div class="input-group">
+                                <span class="input-group-text"><?= $product["quantité_en_stock"] ?></span>
+                                <button class="p-2 btn btn-success material-symbols-outlined" name="transactionType" value="buy">add</button>
+                                <button class="p-2 btn btn-danger material-symbols-outlined" name="transactionType" value="sale">remove</button>
                                 <input class="form-control" type="number" name="transactionSize" min="1" value="1">
-                                <button class="btn btn-success" name="transactionType" value="buy"> + </button>
-                                <button class="btn btn-danger" name="transactionType" value="sale"> - </button>
                             </div>
                         </form>
                     </td>
-                    <td><a href="?ID=<?= $product["ID"] ?>" class="btn btn-warning">modier information</td>
+                    <td><a href="?ID=<?= $product["ID"] ?>" class="p-2 btn btn-warning material-symbols-outlined">edit</td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -127,7 +128,7 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
         </table>
         <button class="btn btn-success" type="submit" name="action" value="create">Créer</button>
     </form>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 
 </html>
