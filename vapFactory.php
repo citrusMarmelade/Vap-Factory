@@ -14,32 +14,19 @@ function getproducts()
     return $rows;
 }
 
-
-
-//met à jour le produit 
-function updateProduct($products)
-{
-    try {
-        global $mysqlConnection;
-        $nom = $products["nom"];
-        $requete = "UPDATE product set 
-         $nom = $products[nom]";
-        $stmt = $products->query($requete);
-    } catch (PDOException $product) {
-        echo $stmt;
-    };
-};
-
 // ajouter un nouveau produit 
 
-$sqlQuery = "INSERT INTO `produits` (`référence`, `nom`, `description`, `prix_d'achat`, `prix_de_vente`, `quantité_en_stock`) 
-VALUES (:reference, :nom, :description, :prix_d_achat, :prix_de_vente, :quantite_en_stock)";
 
-// Préparation
-$insertProduct = $mysqlConnection->prepare($sqlQuery);
 
 
 if (!empty($_POST)) {
+    $sqlQuery = "INSERT INTO `produits` (`référence`, `nom`, `description`, `prix_d'achat`, `prix_de_vente`, 
+`quantité_en_stock`) 
+VALUES (:reference, :nom, :description, :prix_d_achat, :prix_de_vente, :quantite_en_stock)
+ON DUPLICATE KEY UPDATE `nom` = :nom, `description`=:description, `prix_d'achat`= :prix_d_achat, 
+`quantité_en_stock`= :quantite_en_stock,`prix_de_vente`= :prix_de_vente";
+// Préparation
+$insertProduct = $mysqlConnection->prepare($sqlQuery);
 
     $receptionReference = $_POST["réference"];
     $receptionNom = $_POST["nom"];
