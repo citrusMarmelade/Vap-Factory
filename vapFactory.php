@@ -58,15 +58,15 @@ $products = $result->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= $product["description"] ?></td>
                     <td><?= $product["prix_de_vente"] ?></td>
                     <td><?= $product["quantité_en_stock"] ?>
-                    <form class="form-inline">
-                        <input type="hidden" name="action" value="modifyStock">
-                        <div class="input-group">
-                            <input class="form-control" type="number" name="transactionSize" min="1" value="1">
-                            <button class="btn btn-success"  name="transactionType" value="buy"> + </button>
-                            <button class="btn btn-danger" name="transactionType" value="sale"> - </button>
-                        </div>
-                    </form>
-                </td>
+                        <form class="form-inline">
+                            <input type="hidden" name="action" value="modifyStock">
+                            <div class="input-group">
+                                <input class="form-control" type="number" name="transactionSize" min="1" value="1">
+                                <button class="btn btn-success"  name="transactionType" value="buy"> + </button>
+                                <button class="btn btn-danger" name="transactionType" value="sale"> - </button>
+                            </div>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
