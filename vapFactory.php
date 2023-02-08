@@ -3,34 +3,48 @@ require "mysql.php";
 
 if (!empty($_POST)) {
     if ($_POST["action"] == "create") {
-        $receptionReference = $_POST["réference"];
+        $receptionReference = $_POST["référence"];
         $receptionNom = $_POST["nom"];
         $receptionDescription = $_POST["description"];
-        $receptionPrix_de_vente = $_POST["prix_de_vente"];
-        $receptionPrixdachat = $_POST["prix_d_achat"];
+        $receptionPrixDeVente = $_POST["prix_de_vente"];
+        $receptionPrixAchat = $_POST["prix_d_achat"];
         $receptionQuantitéenstock = $_POST["quantité_en_stock"];
         createProduct(
-            $receptionReference, $receptionNom, $receptionDescription,
-            $receptionPrixdachat, $receptionPrix_de_vente, $receptionQuantitéenstock
+            $receptionReference,
+            $receptionNom,
+            $receptionDescription,
+            $receptionPrixAchat,
+            $receptionPrixDeVente,
+            $receptionQuantitéenstock
         );
     } else if ($_POST["action"] == "modifyStock") {
         $ID = $_POST["ID"];
         $quantiée = $_POST["transactionSize"];
         $value = $_POST["transactionType"];
-        if ($value=="sale"){
+        if ($value == "sale") {
             $quantiée = -$quantiée;
         }
 
-        changeStock($quantiée,$ID);
+        changeStock($quantiée, $ID);
     }
 };
 
-$result = getProducts();
-$result->execute();
-$products = $result->fetchAll(PDO::FETCH_ASSOC);
+$products = getProducts();
+
+function showValue($modifiedProduct, $name, $editable = true)
+{
+    if ($modifiedProduct != null) {
+        $value = $modifiedProduct[$name];
+        echo "value=\"$value\"";
+        if (!$editable) {
+            echo " readonly";
+        }
+    }
+}
 
 
-
+$modify_id = $_GET["ID"] ?? null;
+$modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
 
 ?>
 <!DOCTYPE html>
@@ -67,45 +81,47 @@ $products = $result->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= $product["quantité_en_stock"] ?>
                         <form class="form-inline" method="post">
                             <input type="hidden" name="action" value="modifyStock">
-                            <input type="hidden" name="ID" value="<?=$product["ID"]?>">
+                            <input type="hidden" name="ID" value="<?= $product["ID"] ?>">
                             <div class="input-group">
                                 <input class="form-control" type="number" name="transactionSize" min="1" value="1">
-                                <button class="btn btn-success"  name="transactionType" value="buy"> + </button>
+                                <button class="btn btn-success" name="transactionType" value="buy"> + </button>
                                 <button class="btn btn-danger" name="transactionType" value="sale"> - </button>
                             </div>
                         </form>
                     </td>
-                    <td><button class="btn btn-warning">modier information</td>
+                    <td><a href="?ID=<?= $product["ID"] ?>" class="btn btn-warning">modier information</td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
+
     <form action="vapFactory.php" method="post">
         <table clas="table">
             <tbody>
                 <tr>
                     <th><label for="nom">nom :</label></th>
-                    <td><input type="text" required name="nom" id="nom" />
+                    <td>
+                        <input type="text" required name="nom" id="nom" <?= showValue($modifiedProduct, "nom") ?> />
                 </tr>
                 <tr>
-                    <th><label for="réference">réference :</label></th>
-                    <td><input type="text" required name="réference" id="réference" />
+                    <th><label for="référence">référence :</label></th>
+                    <td><input type="text" required name="référence" id="référence" <?= showValue($modifiedProduct, "référence", false) ?> />
                 </tr>
                 <tr>
                     <th><label for="description">description :</label></th>
-                    <td><input type="text" required name="description" id="description" />
+                    <td><input type="text" required name="description" id="description" <?= showValue($modifiedProduct, "description") ?> />
                 </tr>
                 <tr>
                     <th><label for="prix_d_achat">prix d'achat :</label></th>
-                    <td><input type="number" step=".01" min="0" required name="prix_d_achat" id="prix_d_achat" />
+                    <td><input type="number" step=".01" min="0" required name="prix_d_achat" id="prix_d_achat" <?= showValue($modifiedProduct, "prix_d'achat") ?> />
                 </tr>
                 <tr>
                     <th><label for="prix_de_vente">prix de vente:</label></th>
-                    <td><input type="number" step=".01" min="0,01" required name="prix_de_vente" id="prix_de_vente" />
+                    <td><input type="number" step=".01" min="0,01" required name="prix_de_vente" id="prix_de_vente" <?= showValue($modifiedProduct, "prix_de_vente") ?> />
                 </tr>
                 <tr>
                     <th><label for="quantité_en_stock">quantité en stock:</label></th>
-                    <td><input type="number" min="0" required name="quantité_en_stock" id="quantité_en_stock" />
+                    <td><input type="number" min="0" required name="quantité_en_stock" id="quantité_en_stock" <?= showValue($modifiedProduct, "quantité_en_stock") ?> />
                 </tr>
             </tbody>
         </table>

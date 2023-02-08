@@ -11,9 +11,10 @@ $mysqlConnection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 function getProducts()
 {
     global $mysqlConnection;
-    $sql = 'SELECT * FROM  produits';
+    $sql = 'SELECT * FROM `produits`';
     $statement = $mysqlConnection->query($sql);
-    return $statement;
+    $statement->execute();
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function createProduct($reference, $nom, $description, $prixAchat, $prixVente, $quantiée)  {
@@ -39,10 +40,18 @@ function createProduct($reference, $nom, $description, $prixAchat, $prixVente, $
 
 //mofifie les stocks
 function changeStock($quantiée,$ID){
-global $mysqlConnection;
-$sqlQuery ="UPDATE `produits` SET `quantité_en_stock` = quantité_en_stock+?  WHERE `produits`.`ID` = ?"; 
+    global $mysqlConnection;
+    $sqlQuery ="UPDATE `produits` SET `quantité_en_stock` = quantité_en_stock+?  WHERE `produits`.`ID` = ?"; 
 
-$changeStock = $mysqlConnection->prepare($sqlQuery);
-$paramsStock = [$quantiée,$ID];
-$changeStock->execute($paramsStock);
+    $changeStock = $mysqlConnection->prepare($sqlQuery);
+    $paramsStock = [$quantiée,$ID];
+    $changeStock->execute($paramsStock);
 };
+
+function getProduct($ID) {
+    global $mysqlConnection;
+    $sqlQuery = "SELECT * FROM `produits` WHERE `produits`.`ID` = ?";
+    $statement = $mysqlConnection->prepare($sqlQuery);
+    $statement->execute([$ID]);
+    return $statement->fetch(PDO::FETCH_ASSOC);
+}
