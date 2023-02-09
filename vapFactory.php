@@ -96,8 +96,8 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
                             </div>
                         </form>
                     </td>
-                    <td><a href="?ID=<?= $product["ID"] ?>" class="p-2 btn btn-warning material-symbols-outlined">edit</a>
-                        <form method="post">
+                    <form method="post">
+                            <td><a href="?ID=<?= $product["ID"] ?>" class="p-2 btn btn-warning material-symbols-outlined">edit</a>
                             <input type="hidden" name="ID" value="<?=  $product["ID"] ?>">
                             <input type="hidden" name="action" value="delete">
                             <button class="p-2 btn btn-danger material-symbols-outlined">delete</button>
