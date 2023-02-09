@@ -55,3 +55,11 @@ function getProduct($ID) {
     $statement->execute([$ID]);
     return $statement->fetch(PDO::FETCH_ASSOC);
 }
+
+function deleteProduct($ID){ 
+    global $mysqlConnection;
+    $sqlQuery =" DELETE FROM `produits` WHERE `produits`.`ID` = ?"; 
+    $statement = $mysqlConnection->prepare($sqlQuery);
+    $statement->execute([$ID]);
+    return $statement->fetch(PDO::FETCH_ASSOC);
+}

@@ -26,6 +26,9 @@ if (!empty($_POST)) {
         }
 
         changeStock($quantiée, $ID);
+    } else if ($_POST["action"] == "delete") {
+        $delete = $_POST["ID"] ;
+        $deleteProduct = deleteProduct($delete);
     }
 };
 
@@ -56,6 +59,7 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="style.css">
     <title>vap factory</title>
 </head>
 
@@ -73,7 +77,7 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
         </thead>
         <tbody>
             <?php foreach ($products as $product) : ?>
-                <tr <?php if ($product["quantité_en_stock"]<=0){echo('class ="bg-danger"');}; 
+                <tr <?php if ($product["quantité_en_stock"]<=0){echo('class ="stock--error"');}; 
                     ?>>
                     
                     <th scope="row"><?= $product["référence"] ?></th>
@@ -92,7 +96,13 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
                             </div>
                         </form>
                     </td>
-                    <td><a href="?ID=<?= $product["ID"] ?>" class="p-2 btn btn-warning material-symbols-outlined">edit</td>
+                    <td><a href="?ID=<?= $product["ID"] ?>" class="p-2 btn btn-warning material-symbols-outlined">edit</a>
+                        <form method="post">
+                            <input type="hidden" name="ID" value="<?=  $product["ID"] ?>">
+                            <input type="hidden" name="action" value="delete">
+                            <button class="p-2 btn btn-danger material-symbols-outlined">delete</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
