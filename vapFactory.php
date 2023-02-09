@@ -73,17 +73,19 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
         </thead>
         <tbody>
             <?php foreach ($products as $product) : ?>
-                <tr>
+                <tr <?php if ($product["quantité_en_stock"]<=0){echo('class ="bg-danger"');}; 
+                    ?>>
+                    
                     <th scope="row"><?= $product["référence"] ?></th>
                     <td><?= $product["nom"] ?></td>
                     <td><?= $product["description"] ?></td>
                     <td><?= $product["prix_de_vente"] ?></td>
                     <td>
-                        <form class="form-inline" method="post">
+                        <form class="border border-dark border-2 rounded " method="post">
                             <input type="hidden" name="action" value="modifyStock">
-                            <input type="hidden" name="ID" value="<?= $product["ID"] ?>">
+                            <input type="hidden" name="ID" value="<?=  $product["ID"] ?>">
                             <div class="input-group">
-                                <span class="input-group-text"><?= $product["quantité_en_stock"] ?></span>
+                                <span class="input-group-text "><?=$product["quantité_en_stock"] ?></span>
                                 <button class="p-2 btn btn-success material-symbols-outlined" name="transactionType" value="buy">add</button>
                                 <button class="p-2 btn btn-danger material-symbols-outlined" name="transactionType" value="sale">remove</button>
                                 <input class="form-control" type="number" name="transactionSize" min="1" value="1">
