@@ -1,23 +1,36 @@
 <?php
-require "mysql.php";
+require_once "validation.php";
+require_once "mysql.php";
+
+
 
 if (!empty($_POST)) {
-    if ($_POST["action"] == "create") {
-        $receptionReference = $_POST["référence"];
-        $receptionNom = $_POST["nom"];
-        $receptionDescription = $_POST["description"];
-        $receptionPrixDeVente = $_POST["prix_de_vente"];
-        $receptionPrixDAchat = $_POST["prix_d_achat"];
-        $receptionQuantitéenstock = $_POST["quantité_en_stock"];
-        createProduct(
-            $receptionReference,
-            $receptionNom,
-            $receptionDescription,
-            $receptionPrixDAchat,
-            $receptionPrixDeVente,
-            $receptionQuantitéenstock
-        );
-    } else if ($_POST["action"] == "modifyStock") {
+    $action = $_POST["action"] ?? "";
+    if ($action == "create") {
+        $receptionReference = $_POST["référence"] ?? "";
+        $receptionNom = $_POST["nom"] ?? "";
+        $receptionDescription = $_POST["description"] ?? "";
+        $receptionPrixDeVente = $_POST["prix_de_vente"] ?? "";
+        $receptionPrixDAchat = $_POST["prix_d_achat"] ?? "";
+        $receptionQuantitéenstock = $_POST["quantité_en_stock"] ?? "";
+        if (
+            validateString("référence", $receptionReference)
+            & validateString("nom", $receptionNom)
+            & validateString("description", $receptionDescription)
+            & validateDecimal("prix d'achat", $receptionPrixDAchat)
+            & validateDecimal("prix de vente", $receptionPrixDeVente)
+            & validateInteger("quantité en stock", $receptionQuantitéenstock)
+        ) { 
+            createProduct(
+                $receptionReference,
+                $receptionNom,
+                $receptionDescription,
+                $receptionPrixDAchat,
+                $receptionPrixDeVente,
+                $receptionQuantitéenstock
+            );
+        }
+    } else if ($action == "modifyStock") {
         $ID = $_POST["ID"];
         $quantiée = $_POST["transactionSize"];
         $value = $_POST["transactionType"];
@@ -26,8 +39,8 @@ if (!empty($_POST)) {
         }
 
         changeStock($quantiée, $ID);
-    } else if ($_POST["action"] == "delete") {
-        $delete = $_POST["ID"] ;
+    } else if ($action == "delete") {
+        $delete = $_POST["ID"];
         $deleteProduct = deleteProduct($delete);
     }
 };
@@ -64,6 +77,17 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
 </head>
 
 <body>
+    <pre>
+        <?php var_dump(getErrors()) ?>
+    </pre>
+    <?php foreach (getErrors() as $error): ?>
+    <div class="alert alert-danger">
+        <?= $error ?>
+    </div>
+    <?php endforeach; 
+        clearErrors();    
+    ?>
+
     <table class="table">
         <thead>
             <tr>
@@ -138,7 +162,7 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-success" type="submit" name="action" value="create">Créer</button>
+        <button class="btn btn-success" formnovalidate type="submit" name="action" value="create">Créer</button>
     </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
