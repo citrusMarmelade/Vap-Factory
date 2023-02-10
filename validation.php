@@ -13,7 +13,7 @@ function clearErrors() {
     $_SESSION["errors"] = [];   
 }
 
-function validateRequired($name, $value) {
+function validateRequired($name, $value, $option = []) {
     if (empty($value)) {
         error("Le champ $name est vide");
         return false;
@@ -21,14 +21,14 @@ function validateRequired($name, $value) {
     return true;    
 }
 
-function validateString($name, $value) {
+function validateString($name, $value, $option = []) {
     if (!validateRequired($name, $value)) {
         return false;
     }
     return true;
 }
 
-function validateDecimal($name, $value) {
+function validateDecimal($name, $value, $option = []) {
     if (!validateRequired($name, $value)){
         return false;
     }
@@ -36,18 +36,22 @@ function validateDecimal($name, $value) {
         error("Le champ $name n'est pas un nombre valide");
         return false;
     }
+    $minValue = $option["minValue"] ?? -INF;
+    if ($value < $minValue) {
+        error("Le champ $name est trop petit, le minimum est de $minValue");
+        return false;
+    }
 
     return true;
 }
 
-function validateInteger($name, $value) {
-    if(!validateDecimal($name, $value)){
+function validateInteger($name, $value, $option = []) {
+    if(!validateDecimal($name, $value, $option)){
         return false;
     }
     if(!is_integer(+$value)){
         error("Le champ $name n'est pas un nombre entier");
         return false;
     }
-    return true;
-    
+    return true;   
 }

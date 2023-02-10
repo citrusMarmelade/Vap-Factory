@@ -17,9 +17,9 @@ if (!empty($_POST)) {
             validateString("référence", $receptionReference)
             & validateString("nom", $receptionNom)
             & validateString("description", $receptionDescription)
-            & validateDecimal("prix d'achat", $receptionPrixDAchat)
-            & validateDecimal("prix de vente", $receptionPrixDeVente)
-            & validateInteger("quantité en stock", $receptionQuantitéenstock)
+            & validateDecimal("prix d'achat", $receptionPrixDAchat, ["minValue" => 0])
+            & validateDecimal("prix de vente", $receptionPrixDeVente, ["minValue" => 0])
+            & validateInteger("quantité en stock", $receptionQuantitéenstock, ["minValue" => 0])
         ) { 
             createProduct(
                 $receptionReference,
