@@ -150,15 +150,15 @@ $modifiedProduct = $modify_id != null ? getProduct($modify_id) : null;
                 </tr>
                 <tr>
                     <th><label for="prix_d_achat">prix d'achat :</label></th>
-                    <td><input type="number" step=".01" min="0" required name="prix_d_achat" id="prix_d_achat" <?= showValue($modifiedProduct, "prix_d'achat") ?> />
+                    <td><input  step=".01" min="0" required name="prix_d_achat" id="prix_d_achat" <?= showValue($modifiedProduct, "prix_d'achat") ?> />
                 </tr>
                 <tr>
                     <th><label for="prix_de_vente">prix de vente:</label></th>
-                    <td><input type="number" step=".01" min="0,01" required name="prix_de_vente" id="prix_de_vente" <?= showValue($modifiedProduct, "prix_de_vente") ?> />
+                    <td><input  step=".01" min="0,01" required name="prix_de_vente" id="prix_de_vente" <?= showValue($modifiedProduct, "prix_de_vente") ?> />
                 </tr>
                 <tr>
                     <th><label for="quantité_en_stock">quantité en stock:</label></th>
-                    <td><input type="number" min="0" required name="quantité_en_stock" id="quantité_en_stock" <?= showValue($modifiedProduct, "quantité_en_stock") ?> />
+                    <td><input   required name="quantité_en_stock" id="quantité_en_stock" <?= showValue($modifiedProduct, "quantité_en_stock") ?> />
                 </tr>
             </tbody>
         </table>
