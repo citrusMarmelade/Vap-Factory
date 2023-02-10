@@ -25,6 +25,18 @@ function validateString($name, $value, $option = []) {
     if (!validateRequired($name, $value)) {
         return false;
     }
+    $minLength = $option["minLength"] ?? 0;
+    if (strlen($value) < $minLength) {
+        error("Le champ $name est trop court, le minimum est de $minLength caractères");
+        return false;
+    }
+    $maxLength = $option["maxLength"] ?? 255;
+    if (strlen($value)> $maxLength){
+        error("le champs $name est trop long, le maximum est de $maxLength caractères");
+        return false;
+    }
+
+
     return true;
 }
 
@@ -39,6 +51,11 @@ function validateDecimal($name, $value, $option = []) {
     $minValue = $option["minValue"] ?? -INF;
     if ($value < $minValue) {
         error("Le champ $name est trop petit, le minimum est de $minValue");
+        return false;
+    }
+    $maxValue = $option["maxValue"] ?? INF;
+    if ($value> $maxValue){
+        error("le champs $name est trop grand, le maximum est de $maxValue");
         return false;
     }
 

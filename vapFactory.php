@@ -2,6 +2,7 @@
 require_once "validation.php";
 require_once "mysql.php";
 
+$validatelength = ["minLength"=>2,"maxLength"=>255];
 
 
 if (!empty($_POST)) {
@@ -14,12 +15,12 @@ if (!empty($_POST)) {
         $receptionPrixDAchat = $_POST["prix_d_achat"] ?? "";
         $receptionQuantitéenstock = $_POST["quantité_en_stock"] ?? "";
         if (
-            validateString("référence", $receptionReference)
-            & validateString("nom", $receptionNom)
-            & validateString("description", $receptionDescription)
-            & validateDecimal("prix d'achat", $receptionPrixDAchat, ["minValue" => 0])
-            & validateDecimal("prix de vente", $receptionPrixDeVente, ["minValue" => 0])
-            & validateInteger("quantité en stock", $receptionQuantitéenstock, ["minValue" => 0])
+            validateString("référence", $receptionReference, $validatelength )
+            & validateString("nom", $receptionNom , $validatelength )
+            & validateString("description", $receptionDescription, $validatelength )
+            & validateDecimal("prix d'achat", $receptionPrixDAchat, ["minValue" => 0,"maxValue"=>999.99])
+            & validateDecimal("prix de vente", $receptionPrixDeVente, ["minValue" => 0.1 ,"maxValue"=>999.99])
+            & validateInteger("quantité en stock", $receptionQuantitéenstock, ["minValue" => 0, "maxValue"=>INF])
         ) { 
             createProduct(
                 $receptionReference,
